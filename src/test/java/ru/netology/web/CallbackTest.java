@@ -8,6 +8,8 @@ import org.junit.jupiter.api.Test;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.Duration;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 
 import static com.codeborne.selenide.Condition.exactText;
@@ -17,42 +19,40 @@ import static com.codeborne.selenide.Selenide.*;
 import static com.codeborne.selenide.Selenide.$;
 
 public class CallbackTest {
+    public String generateDate(int days){
+        return LocalDate.now().plusDays(days).format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
+    }
 
     @BeforeEach
     void openBrowser() {
         open("http://localhost:9999/");
     }
 
-    public String date(int days) {
-        DateFormat newDate = new SimpleDateFormat("dd.MM.yyyy");
-        Calendar c = Calendar.getInstance();
-        c.add(Calendar.DATE, 3);
-        return (newDate.format(c.getTime()));
-    }
-
     @Test
     public void formSubmission() {
         Configuration.holdBrowserOpen = true;
+        String planingDate = generateDate(3);
         $("[placeholder=\"Город\"]").setValue("Москва");
         $("[placeholder=\"Дата встречи\"]").doubleClick();
         $("[placeholder=\"Дата встречи\"]").sendKeys(" ");
-        $("[placeholder=\"Дата встречи\"]").setValue(date(3));
+        $("[placeholder=\"Дата встречи\"]").setValue(planingDate);
         $("[name=\"name\"]").setValue("Иванов Иван");
         $("[name=\"phone\"]").setValue("+79137364555");
         $(".checkbox").click();
         $(".button__text").click();
         $("[data-test-id=\"notification\"]").shouldHave(visible, Duration.ofSeconds(15));
-        $(".notification").shouldHave(Condition.text("Встреча успешно забронирована на "
-                + date(3)));
+        $(".notification_visible").shouldHave(Condition.text("Встреча успешно забронирована на "
+                + planingDate));
     }
 
     @Test
     public void notFoundCity() {
         Configuration.holdBrowserOpen = true;
+        String planingDate = generateDate(3);
         $x("//input[@placeholder=\"Город\"]").setValue("Ласвегас");
         $x("//input[@placeholder=\"Дата встречи\"]").doubleClick();
         $x("//input[@placeholder=\"Дата встречи\"]").sendKeys(" ");
-        $x("//input[@placeholder=\"Дата встречи\"]").setValue(date(3));
+        $x("//input[@placeholder=\"Дата встречи\"]").setValue(planingDate);
         $(byName("name")).setValue("Иванов Иван");
         $(byName("phone")).setValue("+79137364555");
         $(".checkbox").click();
@@ -76,10 +76,11 @@ public class CallbackTest {
     @Test
     public void hyphenInSurname() {
         Configuration.holdBrowserOpen = true;
+        String planingDate = generateDate(3);
         $("[placeholder=\"Город\"]").setValue("Москва");
         $("[placeholder=\"Дата встречи\"]").doubleClick();
         $("[placeholder=\"Дата встречи\"]").sendKeys(" ");
-        $("[placeholder=\"Дата встречи\"]").setValue(date(3));
+        $("[placeholder=\"Дата встречи\"]").setValue(planingDate);
         $("[name=\"name\"]").setValue("Иванов-Петров Иван");
         $("[name=\"phone\"]").setValue("+79137364555");
         $(".checkbox").click();
@@ -90,10 +91,11 @@ public class CallbackTest {
     @Test
     public void invalidSurname() {
         Configuration.holdBrowserOpen = true;
+        String planingDate = generateDate(3);
         $("[placeholder=\"Город\"]").setValue("Москва");
         $("[placeholder=\"Дата встречи\"]").doubleClick();
         $("[placeholder=\"Дата встречи\"]").sendKeys(" ");
-        $("[placeholder=\"Дата встречи\"]").setValue(date(3));
+        $("[placeholder=\"Дата встречи\"]").setValue(planingDate);
         $("[name=\"name\"]").setValue("Worner Kevin");
         $("[name=\"phone\"]").setValue("+79137364555");
         $(".checkbox").click();
@@ -105,10 +107,11 @@ public class CallbackTest {
     @Test
     public void phoneMoreBorder() {
         Configuration.holdBrowserOpen = true;
+        String planingDate = generateDate(3);
         $("[placeholder=\"Город\"]").setValue("Москва");
         $("[placeholder=\"Дата встречи\"]").doubleClick();
         $("[placeholder=\"Дата встречи\"]").sendKeys(" ");
-        $("[placeholder=\"Дата встречи\"]").setValue(date(3));
+        $("[placeholder=\"Дата встречи\"]").setValue(planingDate);
         $("[name=\"name\"]").setValue("Иванов Иван");
         $("[name=\"phone\"]").setValue("+791373645557");
         $(".checkbox").click();
@@ -120,10 +123,11 @@ public class CallbackTest {
     @Test
     public void phoneLessThanBorder() {
         Configuration.holdBrowserOpen = true;
+        String planingDate = generateDate(3);
         $("[placeholder=\"Город\"]").setValue("Москва");
         $("[placeholder=\"Дата встречи\"]").doubleClick();
         $("[placeholder=\"Дата встречи\"]").sendKeys(" ");
-        $("[placeholder=\"Дата встречи\"]").setValue(date(3));
+        $("[placeholder=\"Дата встречи\"]").setValue(planingDate);
         $("[name=\"name\"]").setValue("Иванов Иван");
         $("[name=\"phone\"]").setValue("+791373645557");
         $(".checkbox").click();
@@ -135,10 +139,11 @@ public class CallbackTest {
     @Test
     public void phoneNoPlus() {
         Configuration.holdBrowserOpen = true;
+        String planingDate = generateDate(3);
         $("[placeholder=\"Город\"]").setValue("Москва");
         $("[placeholder=\"Дата встречи\"]").doubleClick();
         $("[placeholder=\"Дата встречи\"]").sendKeys(" ");
-        $("[placeholder=\"Дата встречи\"]").setValue(date(3));
+        $("[placeholder=\"Дата встречи\"]").setValue(planingDate);
         $("[name=\"name\"]").setValue("Иванов Иван");
         $("[name=\"phone\"]").setValue("89137364557");
         $(".checkbox").click();
@@ -150,10 +155,11 @@ public class CallbackTest {
     @Test
     public void noConsentCheckbox() {
         Configuration.holdBrowserOpen = true;
+        String planingDate = generateDate(3);
         $("[placeholder=\"Город\"]").setValue("Москва");
         $("[placeholder=\"Дата встречи\"]").doubleClick();
         $("[placeholder=\"Дата встречи\"]").sendKeys(" ");
-        $("[placeholder=\"Дата встречи\"]").setValue(date(3));
+        $("[placeholder=\"Дата встречи\"]").setValue(planingDate);
         $("[name=\"name\"]").setValue("Иванов Иван");
         $("[name=\"phone\"]").setValue("+79137364557");
         $(".button__text").click();
